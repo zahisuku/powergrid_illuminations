@@ -1,4 +1,4 @@
-# すべてのプラットフォームjarをビルド（fabric/build/libsとneoforge/build/libsに出力されます）
+すべてのプラットフォームjarをビルド（fabric/build/libsとneoforge/build/libsに出力されます）
 ```
 ./gradlew build
 ```
