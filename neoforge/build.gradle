@@ -29,6 +29,10 @@ repositories {
         name = 'NeoForged'
         url = 'https://maven.neoforged.net/releases'
     }
+    maven {
+        name = "Modrinth"
+        url = "https://api.modrinth.com/maven"
+    }
 }
 
 dependencies {
@@ -42,6 +46,10 @@ dependencies {
 
     // neoforge/libs フォルダ内のすべての JAR ファイルを NeoForge 実行環境の依存関係に追加
     modImplementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    // 1.21.1 NeoForge 用 Create
+    // 依存関係（Ponder/Flywheel等）が自動的に取得されます
+    modImplementation "maven.modrinth:create:6.0.10+mc1.21.1"
 }
 
 processResources {
