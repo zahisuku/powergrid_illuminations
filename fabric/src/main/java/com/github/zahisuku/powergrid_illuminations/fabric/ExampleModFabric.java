@@ -2,7 +2,7 @@ package com.github.zahisuku.powergrid_illuminations.fabric;
 
 import net.fabricmc.api.ModInitializer;
 
-import com.github.zahisuku.powergrid_illuminations.ExampleMod;
+import com.github.zahisuku.powergrid_illuminations.PowerGridIlluminations;
 
 public final class ExampleModFabric implements ModInitializer {
     @Override
@@ -12,6 +12,6 @@ public final class ExampleModFabric implements ModInitializer {
         // Proceed with mild caution.
 
         // Run our common setup.
-        ExampleMod.init();
+        PowerGridIlluminations.init();
     }
 }
