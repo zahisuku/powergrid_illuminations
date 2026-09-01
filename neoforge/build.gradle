@@ -43,6 +43,12 @@ repositories {
     }
     maven { url = "https://maven.createmod.net" } // Create, Ponder, Flywheel
     maven { url = "https://maven.ithundxr.dev/snapshots" } // Registrate
+
+      // Sable Companion
+    maven {
+        name = "RyanHCode"
+        url = "https://maven.ryanhcode.dev/releases"
+    }
 }
 
 dependencies {
@@ -66,6 +72,10 @@ dependencies {
     implementation("com.tterrag.registrate:Registrate:${registrate_version}")
 
     // modImplementation "maven.modrinth:eWiBLJ9R:ip4gJrgx"
+
+    modLocalRuntime(
+        "dev.ryanhcode.sable-companion:sable-companion-common-${minecraft_version}:1.6.0"
+    )
 }
 
 processResources {
