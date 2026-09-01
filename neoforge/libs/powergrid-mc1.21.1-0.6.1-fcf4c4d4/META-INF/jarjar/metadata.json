@@ -1,0 +1,70 @@
+{
+  "jars": [
+    {
+      "identifier": {
+        "group": "org.ejml",
+        "artifact": "ejml-ddense"
+      },
+      "version": {
+        "range": "[0.44.0,)",
+        "artifactVersion": "0.44.0"
+      },
+      "path": "META-INF/jars/ejml-ddense-0.44.0.jar"
+    },
+    {
+      "identifier": {
+        "group": "org.ejml",
+        "artifact": "ejml-dsparse"
+      },
+      "version": {
+        "range": "[0.44.0,)",
+        "artifactVersion": "0.44.0"
+      },
+      "path": "META-INF/jars/ejml-dsparse-0.44.0.jar"
+    },
+    {
+      "identifier": {
+        "group": "dev.ryanhcode.sable-companion",
+        "artifact": "sable-companion-common-1.21.1"
+      },
+      "version": {
+        "range": "[1.6.0,)",
+        "artifactVersion": "1.6.0"
+      },
+      "path": "META-INF/jars/sable-companion-common-1.21.1-1.6.0.jar"
+    },
+    {
+      "identifier": {
+        "group": "org.ejml",
+        "artifact": "ejml-simple"
+      },
+      "version": {
+        "range": "[0.44.0,)",
+        "artifactVersion": "0.44.0"
+      },
+      "path": "META-INF/jars/ejml-simple-0.44.0.jar"
+    },
+    {
+      "identifier": {
+        "group": "org.ejml",
+        "artifact": "ejml-core"
+      },
+      "version": {
+        "range": "[0.44.0,)",
+        "artifactVersion": "0.44.0"
+      },
+      "path": "META-INF/jars/ejml-core-0.44.0.jar"
+    },
+    {
+      "identifier": {
+        "group": "io.github.llamalad7",
+        "artifact": "mixinextras-neoforge"
+      },
+      "version": {
+        "range": "[0.3.5,)",
+        "artifactVersion": "0.3.5"
+      },
+      "path": "META-INF/jars/mixinextras-neoforge-0.3.5.jar"
+    }
+  ]
+}
