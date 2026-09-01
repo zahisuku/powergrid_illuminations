@@ -39,6 +39,9 @@ dependencies {
 
     common(project(path: ':common', configuration: 'namedElements')) { transitive = false }
     shadowBundle project(path: ':common', configuration: 'transformProductionNeoForge')
+
+    // neoforge/libs フォルダ内のすべての JAR ファイルを NeoForge 実行環境の依存関係に追加
+    modImplementation fileTree(dir: 'libs', include: ['*.jar'])
 }
 
 processResources {
