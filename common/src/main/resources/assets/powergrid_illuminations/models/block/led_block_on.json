@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "powergrid_illuminations:block/led_block_on"
+  }
+}
