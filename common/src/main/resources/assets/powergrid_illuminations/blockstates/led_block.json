@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "lit=false": {
+      "model": "powergrid_illuminations:block/led_block_off"
+    },
+    "lit=true": {
+      "model": "powergrid_illuminations:block/led_block_on"
+    }
+  }
+}
