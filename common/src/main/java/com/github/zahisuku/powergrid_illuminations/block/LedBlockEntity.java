@@ -29,6 +29,10 @@ public class LedBlockEntity extends ElectricBlockEntity {
         );
     }
 
+    public double getPower() {
+        return wire == null ? 0.0 : wire.power();
+    }
+
     @Override
     public void electricalTick() {
         super.electricalTick();
