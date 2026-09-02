@@ -1,10 +1,17 @@
 package com.github.zahisuku.powergrid_illuminations.block;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
@@ -14,18 +21,8 @@ import org.patryk3211.powergrid.electricity.base.TerminalBoundingBox;
 import org.patryk3211.powergrid.electricity.base.terminals.BlockStateTerminalCollection;
 
 public class LedBlock extends ElectricBlock {
-    // 点灯・消灯を管理するブロック状態（Lit）
     public static final BooleanProperty LIT = BlockStateProperties.LIT;
 
-    /**
-     * LEDの電気端子。
-     *
-     * Terminal 0 = Z-側
-     * Terminal 1 = Z+側
-     *
-     * 座標はPowerGridの既存ResistorBlockの
-     * 2端子配置を基準にしている。
-     */
     private static final TerminalBoundingBox[] TERMINALS = {
             new TerminalBoundingBox(
                     IDecoratedTerminal.CONNECTOR,
@@ -39,34 +36,16 @@ public class LedBlock extends ElectricBlock {
             )
     };
 
-    /**
-     * LED本体の形状。
-     *
-     * STEP4ではまだ専用モデルを作成していないため、
-     * ブロック本体を通常の1ブロック形状として扱う。
-     *
-     * BlockStateTerminalCollection側で端子形状も
-     * 自動的に追加される。
-     */
-   private static final VoxelShape SHAPE = Shapes.block();
+    private static final VoxelShape SHAPE = Shapes.block();
 
     public LedBlock(Properties properties) {
         super(properties);
 
-        /*
-         * 初期状態は消灯。
-         */
         registerDefaultState(
                 defaultBlockState()
                         .setValue(LIT, false)
         );
 
-        /*
-         * PowerGridの電気端子を登録。
-         *
-         * LITの値によって端子を変更する必要はないため、
-         * すべてのBlockStateで同じ2端子を使用する。
-         */
         setTerminalCollection(
                 BlockStateTerminalCollection.builder(this)
                         .forAllStates(state -> TERMINALS)
@@ -81,5 +60,30 @@ public class LedBlock extends ElectricBlock {
     ) {
         super.createBlockStateDefinition(builder);
         builder.add(LIT);
+    }
+
+    @Override
+    public InteractionResult use(
+            BlockState state,
+            Level level,
+            BlockPos pos,
+            Player player,
+            InteractionHand hand,
+            BlockHitResult hit
+    ) {
+        if (level.isClientSide) {
+            return InteractionResult.SUCCESS;
+        }
+
+        if (level.getBlockEntity(pos) instanceof LedBlockEntity led) {
+            double power = led.getPower();
+            player.displayClientMessage(
+                    Component.literal("Power Status: " + String.format("%.3f", power) + " W"),
+                    true
+            );
+            return InteractionResult.SUCCESS;
+        }
+
+        return InteractionResult.PASS;
     }
 }
