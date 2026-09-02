@@ -9,4 +9,9 @@ public class LedBlockEntity extends ElectricBlockEntity {
     public LedBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
     }
+
+    @Override
+    public void buildCircuit(CircuitBuilder builder) {
+        builder.setTerminalCount(2);
+    }
 }
