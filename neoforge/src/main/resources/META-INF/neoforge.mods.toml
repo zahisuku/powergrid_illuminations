@@ -34,5 +34,12 @@ versionRange = "[13.0.11,)"
 ordering = "AFTER"
 side = "BOTH"
 
+[[dependencies.powergrid_illuminations]]
+modId = "powergrid"
+type = "required"
+versionRange = "[0.6.1,)"
+ordering = "AFTER"
+side = "BOTH"
+
 [[mixins]]
 config = "powergrid_illuminations.mixins.json"
