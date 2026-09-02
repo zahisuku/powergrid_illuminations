@@ -71,7 +71,7 @@ dependencies {
     runtimeOnly("dev.engine-room.flywheel:flywheel-neoforge-${minecraft_version}:${flywheel_version}")
     implementation("com.tterrag.registrate:Registrate:${registrate_version}")
 
-    // modImplementation "maven.modrinth:eWiBLJ9R:ip4gJrgx"
+    modImplementation "maven.modrinth:eWiBLJ9R:ip4gJrgx" // powergrid
 
     modLocalRuntime(
         "dev.ryanhcode.sable-companion:sable-companion-common-${minecraft_version}:1.6.0"
