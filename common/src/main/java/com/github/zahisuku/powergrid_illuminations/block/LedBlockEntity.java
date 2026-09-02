@@ -8,6 +8,10 @@ import org.patryk3211.powergrid.electricity.sim.ElectricWire;
 
 public class LedBlockEntity extends ElectricBlockEntity {
     private static final float LED_RESISTANCE = 15.0f;
+    private static final double RATED_VOLTAGE = 2.0;
+    private static final double MAX_VOLTAGE = 3.0;
+    private static final double RATED_POWER = 0.05;
+    private static final double MAX_POWER = 0.1;
 
     private ElectricWire wire;
 
@@ -23,5 +27,30 @@ public class LedBlockEntity extends ElectricBlockEntity {
             builder.terminalNode(0),
             builder.terminalNode(1)
         );
+    }
+
+    @Override
+    public void electricalTick() {
+        super.electricalTick();
+
+        if (wire == null || !wire.isConverged())
+            return;
+
+        double voltage = Math.abs(wire.potentialDifference());
+        double power = wire.power();
+        boolean lit = voltage >= RATED_VOLTAGE
+            && voltage <= MAX_VOLTAGE
+            && power >= RATED_POWER
+            && power <= MAX_POWER;
+
+        BlockState state = getBlockState();
+        if (state.getValue(LedBlock.LIT) != lit) {
+            level.setBlockAndUpdate(
+                worldPosition,
+                state.setValue(LedBlock.LIT, lit)
+            );
+        }
+
+        applyPower(wire);
     }
 }
