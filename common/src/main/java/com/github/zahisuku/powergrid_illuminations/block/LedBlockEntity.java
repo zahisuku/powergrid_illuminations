@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.patryk3211.powergrid.electricity.base.ElectricBlockEntity;
+import org.patryk3211.powergrid.electricity.sim.ElectricWire;
 
 public class LedBlockEntity extends ElectricBlockEntity {
     private static final float LED_RESISTANCE = 15.0f;
