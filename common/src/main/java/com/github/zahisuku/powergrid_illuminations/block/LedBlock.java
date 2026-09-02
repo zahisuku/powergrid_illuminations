@@ -6,6 +6,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 import org.patryk3211.powergrid.electricity.base.ElectricBlock;
 import org.patryk3211.powergrid.electricity.base.IDecoratedTerminal;
@@ -47,7 +48,7 @@ public class LedBlock extends ElectricBlock {
      * BlockStateTerminalCollection側で端子形状も
      * 自動的に追加される。
      */
-    private static final var SHAPE = Shapes.block();
+   private static final VoxelShape SHAPE = Shapes.block();
 
     public LedBlock(Properties properties) {
         super(properties);
