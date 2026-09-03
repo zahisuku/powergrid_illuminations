@@ -60,7 +60,7 @@ public class ModBlocks {
                     "led_block",
                     () -> new BlockItem(
                             LED_BLOCK.get(),
-                            new Item.Properties()
+                            new Item.Properties().arch$tab(ModCreativeTabs.POWERGRID_ILLUMINATIONS_TAB)
                     )
             );
 

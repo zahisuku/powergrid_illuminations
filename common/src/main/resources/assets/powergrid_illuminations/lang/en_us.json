@@ -1,4 +1,5 @@
 {
   "block.powergrid_illuminations.led_block": "LED Block",
-  "item.powergrid_illuminations.led_block": "LED Block"
+  "item.powergrid_illuminations.led_block": "LED Block",
+  "category.powergrid_illuminations_tab": "Power Grid - Illuminations"
 }
