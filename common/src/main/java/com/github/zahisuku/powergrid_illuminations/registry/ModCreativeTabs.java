@@ -22,7 +22,7 @@ public class ModCreativeTabs {
     public static void initTabs(){
         POWERGRID_ILLUMINATIONS_TAB = TABS.register("powergrid_illuminations_tab",
                 () -> CreativeTabRegistry.create(Component.translatable("category.powergrid_illuminations_tab"),
-                    () -> new ItemStack(ModBlocks.LED_BLOCK_ITEM.get())
+                    () -> new ItemStack(ModItems.LED_BLOCK_ITEM.get())
                 )
         );
         TABS.register();

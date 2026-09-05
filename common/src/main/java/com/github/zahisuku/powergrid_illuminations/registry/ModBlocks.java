@@ -1,5 +1,8 @@
 package com.github.zahisuku.powergrid_illuminations.registry;
 
+// import org.patryk3211.powergrid.PowerGrid;
+// import org.patryk3211.powergrid.electricity.light.bulb.LightBulb;
+
 import com.github.zahisuku.powergrid_illuminations.PowerGridIlluminations;
 import com.github.zahisuku.powergrid_illuminations.block.LedBlock;
 
@@ -7,10 +10,13 @@ import dev.architectury.registry.registries.DeferredRegister;
 import dev.architectury.registry.registries.RegistrySupplier;
 
 import net.minecraft.core.registries.Registries;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+
+// import com.tterrag.registrate.util.entry.ItemEntry;
+
+// import static org.patryk3211.powergrid.PowerGrid.REGISTRATE;
+// import static org.patryk3211.powergrid.utility.DataProviderUtility.itemWithParent;
 
 public class ModBlocks {
 
@@ -18,12 +24,6 @@ public class ModBlocks {
             DeferredRegister.create(
                     PowerGridIlluminations.MOD_ID,
                     Registries.BLOCK
-            );
-
-    public static final DeferredRegister<Item> ITEMS =
-            DeferredRegister.create(
-                    PowerGridIlluminations.MOD_ID,
-                    Registries.ITEM
             );
 
     /*
@@ -52,20 +52,29 @@ public class ModBlocks {
                     )
             );
 
-    /*
-     * LED Block Item
-     */
-    public static final RegistrySupplier<Item> LED_BLOCK_ITEM =
-            ITEMS.register(
-                    "led_block",
-                    () -> new BlockItem(
-                            LED_BLOCK.get(),
-                            new Item.Properties().arch$tab(ModCreativeTabs.POWERGRID_ILLUMINATIONS_TAB)
-                    )
-            );
+    
+
+//     public static final ItemEntry<LED_Bulb> LED_BULB = REGISTRATE.item("LED_bulb", LED_Bulb::new)
+//             .transform(LightBulb.setModelNameProvider(() -> state -> PowerGrid.asResource(switch(state) {
+//                 case OFF -> "block/lamps/light_bulb";
+//                 case LOW_POWER, ON -> "block/lamps/light_bulb_on";
+//                 case BROKEN -> "block/lamps/light_bulb_broken";
+//                 case LIGHT -> "block/lamps/light_bulb_light";
+//             })))
+//             .transform(LightBulb.setDyedModelNameProvider(() -> state -> PowerGrid.asResource(switch(state) {
+//                 case OFF -> "block/lamps/dyed_light_bulb";
+//                 case LOW_POWER, ON -> "block/lamps/dyed_light_bulb_on";
+//                 case BROKEN -> "block/lamps/dyed_light_bulb_broken";
+//                 case LIGHT -> "block/lamps/dyed_light_bulb_light";
+//                 case BULB -> "block/lamps/dyed_light_bulb_bulb";
+//             })))
+//             .transform(LightBulb.setProperties(0.05f, 2, 15, 0.036f))
+//             .model(itemWithParent("block/lamps/light_bulb"))
+//             .lang("LED Bulb")
+//             .register();
+            
 
     public static void register() {
         BLOCKS.register();
-        ITEMS.register();
     }
 }
