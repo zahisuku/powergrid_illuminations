@@ -18,7 +18,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.patryk3211.powergrid.electricity.base.ElectricBlock;
 import org.patryk3211.powergrid.electricity.base.IDecoratedTerminal;
 import org.patryk3211.powergrid.electricity.base.TerminalBoundingBox;
-import org.patryk3211.powergrid.electricity.base.terminals.BlockStateTerminalCollection;
 
 public class LedBlock extends ElectricBlock {
     public static final BooleanProperty LIT = BlockStateProperties.LIT;
@@ -46,12 +45,8 @@ public class LedBlock extends ElectricBlock {
                         .setValue(LIT, false)
         );
 
-        setTerminalCollection(
-                BlockStateTerminalCollection.builder(this)
-                        .forAllStates(state -> TERMINALS)
-                        .withShapeMapper(state -> SHAPE)
-                        .build()
-        );
+        // プラットフォーム固有のセットアップを呼び出す
+        LedBlockSetup.setupTerminalCollection(this, TERMINALS, SHAPE);
     }
 
     @Override
