@@ -1,33 +1,19 @@
 package com.github.zahisuku.powergrid_illuminations.electricity;
 
-import com.github.zahisuku.powergrid_illuminations.PowerGridIlluminations;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
 
 import org.patryk3211.powergrid.electricity.light.bulb.IFixtureEntity;
 import org.patryk3211.powergrid.electricity.light.bulb.ILightBulb;
 import org.patryk3211.powergrid.electricity.light.bulb.LightBulb;
 import org.patryk3211.powergrid.electricity.light.bulb.LightBulbState;
-import org.patryk3211.powergrid.electricity.light.fixture.LightFixtureBlockEntity;
 
-import org.jetbrains.annotations.Nullable;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static com.github.zahisuku.powergrid_illuminations.PowerGridIlluminations.asResource;
-
-import java.util.List;
 
 public class LedLightBulb extends LightBulb {
     private static final float RATED_POWER_WATTS = 3.0f;
