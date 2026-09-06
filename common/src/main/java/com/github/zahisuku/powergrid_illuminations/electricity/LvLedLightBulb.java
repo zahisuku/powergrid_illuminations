@@ -39,15 +39,15 @@ public class LvLedLightBulb extends LightBulb {
     private static final float THERMAL_MASS = 0.00015f;
     private static final float OVERHEAT_TEMPERATURE = 2100.0f;
     private static final float DISSIPATION_DIVISOR = 1450.0f;
-    private static final PartialModel MODEL_OFF = partial("block/lamps/lv_light_bulb");
-    private static final PartialModel MODEL_ON = partial("block/lamps/lv_light_bulb_on");
-    private static final PartialModel MODEL_BROKEN = partial("block/lamps/lv_light_bulb_broken");
-    private static final PartialModel MODEL_LIGHT = partial("block/lamps/lv_light_bulb_light");
-    private static final PartialModel DYED_MODEL_OFF = partial("block/lamps/lv_dyed_light_bulb");
-    private static final PartialModel DYED_MODEL_ON = partial("block/lamps/lv_dyed_light_bulb_on");
-    private static final PartialModel DYED_MODEL_BROKEN = partial("block/lamps/lv_dyed_light_bulb_broken");
-    private static final PartialModel DYED_MODEL_LIGHT = partial("block/lamps/lv_dyed_light_bulb_light");
-    private static final PartialModel DYED_MODEL_BULB = partial("block/lamps/lv_dyed_light_bulb_bulb");
+    private static final PartialModel MODEL_OFF = partial("block/lamps/light_bulb");
+    private static final PartialModel MODEL_ON = partial("block/lamps/light_bulb_on");
+    private static final PartialModel MODEL_BROKEN = partial("block/lamps/light_bulb_broken");
+    private static final PartialModel MODEL_LIGHT = partial("block/lamps/light_bulb_light");
+    private static final PartialModel DYED_MODEL_OFF = partial("block/lamps/dyed_light_bulb");
+    private static final PartialModel DYED_MODEL_ON = partial("block/lamps/dyed_light_bulb_on");
+    private static final PartialModel DYED_MODEL_BROKEN = partial("block/lamps/dyed_light_bulb_broken");
+    private static final PartialModel DYED_MODEL_LIGHT = partial("block/lamps/dyed_light_bulb_light");
+    private static final PartialModel DYED_MODEL_BULB = partial("block/lamps/dyed_light_bulb_bulb");
 
     public LvLedLightBulb(Item.Properties settings) {
         super(settings);

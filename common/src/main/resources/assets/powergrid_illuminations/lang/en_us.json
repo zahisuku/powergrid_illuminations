@@ -1,5 +1,8 @@
 {
   "block.powergrid_illuminations.led_block": "LED Block",
   "item.powergrid_illuminations.led_block": "LED Block",
+  "item.powergrid_illuminations.led_filament": "LED Filament",
+  "item.powergrid_illuminations.lv_led_bulb": "LV LED Bulb",
+  "item.powergrid_illuminations.led_bulb": "LED Bulb",
   "category.powergrid_illuminations_tab": "Power Grid - Illuminations"
 }
