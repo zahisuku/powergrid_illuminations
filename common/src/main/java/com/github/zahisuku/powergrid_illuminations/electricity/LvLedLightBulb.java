@@ -1,35 +1,20 @@
 package com.github.zahisuku.powergrid_illuminations.electricity;
 
-import com.github.zahisuku.powergrid_illuminations.PowerGridIlluminations;
 import com.simibubi.create.foundation.blockEntity.SmartBlockEntity;
 
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import dev.engine_room.flywheel.lib.model.baked.PartialModel;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
 
-import org.patryk3211.powergrid.PowerGrid;
 import org.patryk3211.powergrid.electricity.light.bulb.IFixtureEntity;
 import org.patryk3211.powergrid.electricity.light.bulb.ILightBulb;
 import org.patryk3211.powergrid.electricity.light.bulb.LightBulb;
 import org.patryk3211.powergrid.electricity.light.bulb.LightBulbState;
-import org.patryk3211.powergrid.electricity.light.fixture.LightFixtureBlockEntity;
 
-import org.jetbrains.annotations.Nullable;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static com.github.zahisuku.powergrid_illuminations.PowerGridIlluminations.asResource;
 
-import java.util.List;
 
 public class LvLedLightBulb extends LightBulb {
     private static final float RATED_POWER_WATTS = 3.0f;
@@ -39,15 +24,15 @@ public class LvLedLightBulb extends LightBulb {
     private static final float THERMAL_MASS = 0.00015f;
     private static final float OVERHEAT_TEMPERATURE = 2100.0f;
     private static final float DISSIPATION_DIVISOR = 1450.0f;
-    private static final PartialModel MODEL_OFF = partial("block/lamps/light_bulb");
-    private static final PartialModel MODEL_ON = partial("block/lamps/light_bulb_on");
-    private static final PartialModel MODEL_BROKEN = partial("block/lamps/light_bulb_broken");
-    private static final PartialModel MODEL_LIGHT = partial("block/lamps/light_bulb_light");
-    private static final PartialModel DYED_MODEL_OFF = partial("block/lamps/dyed_light_bulb");
-    private static final PartialModel DYED_MODEL_ON = partial("block/lamps/dyed_light_bulb_on");
-    private static final PartialModel DYED_MODEL_BROKEN = partial("block/lamps/dyed_light_bulb_broken");
-    private static final PartialModel DYED_MODEL_LIGHT = partial("block/lamps/dyed_light_bulb_light");
-    private static final PartialModel DYED_MODEL_BULB = partial("block/lamps/dyed_light_bulb_bulb");
+    private static final PartialModel MODEL_OFF = partial("block/lamps/lv_light_bulb");
+    private static final PartialModel MODEL_ON = partial("block/lamps/lv_light_bulb_on");
+    private static final PartialModel MODEL_BROKEN = partial("block/lamps/lv_light_bulb_broken");
+    private static final PartialModel MODEL_LIGHT = partial("block/lamps/lv_light_bulb_light");
+    private static final PartialModel DYED_MODEL_OFF = partial("block/lamps/lv_dyed_light_bulb");
+    private static final PartialModel DYED_MODEL_ON = partial("block/lamps/lv_dyed_light_bulb_on");
+    private static final PartialModel DYED_MODEL_BROKEN = partial("block/lamps/lv_dyed_light_bulb_broken");
+    private static final PartialModel DYED_MODEL_LIGHT = partial("block/lamps/lv_dyed_light_bulb_light");
+    private static final PartialModel DYED_MODEL_BULB = partial("block/lamps/lv_dyed_light_bulb_bulb");
 
     public LvLedLightBulb(Item.Properties settings) {
         super(settings);
