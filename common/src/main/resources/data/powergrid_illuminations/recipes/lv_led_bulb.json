@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " A ",
+    "ABA",
+    " C "
+  ],
+  "key": {
+    "A": {
+      "item": "minecraft:glass_pane"
+    },
+    "B": {
+      "item": "powergrid_illuminations:led_filament"
+    },
+    "C": {
+      "item": "create:iron_sheet"
+    }
+  },
+  "result": {
+    "item": "powergrid_illuminations:lv_led_bulb",
+    "count": 1
+  }
+}
