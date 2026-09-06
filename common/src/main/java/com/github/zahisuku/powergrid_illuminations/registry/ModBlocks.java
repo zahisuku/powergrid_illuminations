@@ -7,8 +7,6 @@ import dev.architectury.registry.registries.DeferredRegister;
 import dev.architectury.registry.registries.RegistrySupplier;
 
 import net.minecraft.core.registries.Registries;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 
@@ -20,11 +18,7 @@ public class ModBlocks {
                     Registries.BLOCK
             );
 
-    public static final DeferredRegister<Item> ITEMS =
-            DeferredRegister.create(
-                    PowerGridIlluminations.MOD_ID,
-                    Registries.ITEM
-            );
+    
 
     /*
      * LED Block
@@ -52,20 +46,9 @@ public class ModBlocks {
                     )
             );
 
-    /*
-     * LED Block Item
-     */
-    public static final RegistrySupplier<Item> LED_BLOCK_ITEM =
-            ITEMS.register(
-                    "led_block",
-                    () -> new BlockItem(
-                            LED_BLOCK.get(),
-                            new Item.Properties().arch$tab(ModCreativeTabs.POWERGRID_ILLUMINATIONS_TAB)
-                    )
-            );
+    
 
     public static void register() {
         BLOCKS.register();
-        ITEMS.register();
     }
 }
