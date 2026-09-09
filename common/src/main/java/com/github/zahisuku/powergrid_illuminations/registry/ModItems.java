@@ -10,6 +10,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 
 import static com.github.zahisuku.powergrid_illuminations.registry.ModBlocks.LED_BLOCK;
+import static com.github.zahisuku.powergrid_illuminations.registry.ModBlocks.LED_FIXTURE;
 
 public class ModItems {
     public static final DeferredRegister<Item> ITEMS =
@@ -26,6 +27,17 @@ public class ModItems {
                 "led_block",
                 () -> new BlockItem(
                         LED_BLOCK.get(),
+                        new Item
+                            .Properties()
+                            .arch$tab(ModCreativeTabs.POWERGRID_ILLUMINATIONS_TAB)
+                )
+            );
+
+    public static final RegistrySupplier<Item> LED_FIXTURE_ITEM = ITEMS
+        .register(
+                "led_fixture",
+                () -> new BlockItem(
+                        LED_FIXTURE.get(),
                         new Item
                             .Properties()
                             .arch$tab(ModCreativeTabs.POWERGRID_ILLUMINATIONS_TAB)

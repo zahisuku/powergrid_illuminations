@@ -2,6 +2,8 @@ package com.github.zahisuku.powergrid_illuminations.registry;
 
 import com.github.zahisuku.powergrid_illuminations.PowerGridIlluminations;
 import com.github.zahisuku.powergrid_illuminations.block.LedBlockEntity;
+import com.github.zahisuku.powergrid_illuminations.block.LEDFixtureBlockEntity;
+
 import dev.architectury.registry.registries.DeferredRegister;
 import dev.architectury.registry.registries.RegistrySupplier;
 import net.minecraft.core.BlockPos;
@@ -26,8 +28,22 @@ public class ModBlockEntities {
                     ).build(null)
             );
 
+        public static final RegistrySupplier<BlockEntityType<LEDFixtureBlockEntity>> LED_FIXTURE =
+            BLOCK_ENTITIES.register(
+                "led_fixture",
+                () -> BlockEntityType.Builder.of(
+                        ModBlockEntities::createLEDFixtureBlockEntity,
+                        ModBlocks.LED_FIXTURE.get()
+                ).build(null)
+            );
+
     private static LedBlockEntity createLedBlockEntity(BlockPos pos, BlockState state) {
         return new LedBlockEntity(LED_BLOCK_ENTITY.get(), pos, state);
+    }
+
+
+    private static LEDFixtureBlockEntity createLEDFixtureBlockEntity(BlockPos pos, BlockState state) {
+        return new LEDFixtureBlockEntity(LED_FIXTURE.get(), pos, state);
     }
 
     public static void register() {
