@@ -44,6 +44,18 @@ public class ModItems {
                 )
             );
 
+    public static final RegistrySupplier<Item> SMALL_LED_BULB_ITEM = ITEMS
+        .register(
+                "small_led_bulb",
+                () -> new SmallLedBulb(
+                        new Item
+                            .Properties()
+                            .arch$tab(ModCreativeTabs.POWERGRID_ILLUMINATIONS_TAB)
+            // // modelメソッドは、電球のアイテムモデルを設定するために使用されます。
+            // .model(itemWithParent("block/small_leds/small_led_bulb"))
+        )
+            );
+    
     public static final RegistrySupplier<Item> LV_LED_BULB = ITEMS
         .register(
                 "lv_led_bulb",

@@ -1,6 +1,5 @@
 package com.github.zahisuku.powergrid_illuminations.block;
 
-import org.patryk3211.powergrid.electricity.light.fixture.AbstractLightFixtureBlockEntity;
 import org.patryk3211.powergrid.electricity.sim.SwitchedWire;
 
 import com.simibubi.create.content.schematics.requirement.ItemRequirement;
@@ -13,7 +12,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import static net.minecraft.world.level.block.Block.UPDATE_ALL_IMMEDIATE;
 
-public class LEDFixtureBlockEntity extends AbstractLightFixtureBlockEntity{
+public class LEDFixtureBlockEntity extends AbstractLedFixtureBlockEntity{
     private SwitchedWire filament;
 
     public LEDFixtureBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
