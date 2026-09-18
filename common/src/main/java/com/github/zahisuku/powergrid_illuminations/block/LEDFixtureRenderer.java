@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 
+import com.github.zahisuku.powergrid_illuminations.registry.ModRenderLayers;
 public class LEDFixtureRenderer extends SafeBlockEntityRenderer<LEDFixtureBlockEntity> {
     public LEDFixtureRenderer(BlockEntityRendererProvider.Context context) {}
 
@@ -21,6 +22,9 @@ public class LEDFixtureRenderer extends SafeBlockEntityRenderer<LEDFixtureBlockE
             return;
 
         var state = be.getBlockState();
+        var facing = state.getValue(LEDFixtureBlock.FACING);
+
+        var vb = buffers.getBuffer(RenderType.cutout());
         var model = bulb.getModel();
         if (model == null)
             return;
@@ -29,7 +33,40 @@ public class LEDFixtureRenderer extends SafeBlockEntityRenderer<LEDFixtureBlockE
         rotateToFacing(buffer, state.getValue(LEDFixtureBlock.FACING))
                 .translate(((LEDFixtureBlock) state.getBlock()).modelOffset)
                 .light(light)
-                .renderInto(poseStack, buffers.getBuffer(RenderType.cutout()));
+                .renderInto(poseStack, vb);
+
+
+        var color = bulb.getColor();
+        int r = 255, g = 255, b = 255;
+        if(color != null) {
+            vb = buffers.getBuffer(RenderType.translucent());
+            var bulbBuffer = CachedBuffers.partial(bulb.getDyedBulb(), state);
+            var texDif = (int)color.getTextureDiffuseColor();
+            // Basic port of getTextureDiffuseColors
+            r = (texDif & 0xFF0000) >> 16;
+            g = (texDif & 0xFF00) >> 8;
+            b = (texDif & 0xFF) >> 0;
+            rotateToFacing(bulbBuffer, facing)
+                    .color(r, g, b, 255)
+                    .translate(((LEDFixtureBlock) state.getBlock()).modelOffset)
+                    .light(light)
+                    .renderInto(poseStack, vb);
+        }
+        
+        if(bulb.isBurned())
+            return;
+        
+        float a = bulb.getAlpha();
+        if(a > 0) {
+            var vba = buffers.getBuffer(ModRenderLayers.getAdditive());
+            var lightModel = bulb.getLightModel();
+            var lightBuffer = CachedBuffers.partial(lightModel, state);
+            rotateToFacing(lightBuffer, facing)
+                    .translate(((LEDFixtureBlock) state.getBlock()).modelOffset)
+                    .light(light)
+                    .color((int) (a * r), (int) (a * g), (int) (a * b), 255)
+                    .renderInto(poseStack,vba);
+        }
     }
 
     private static SuperByteBuffer rotateToFacing(SuperByteBuffer buffer, Direction facing) {
