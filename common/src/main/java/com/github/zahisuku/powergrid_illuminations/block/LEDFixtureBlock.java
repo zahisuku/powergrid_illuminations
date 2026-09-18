@@ -38,7 +38,7 @@ import org.patryk3211.powergrid.electricity.base.DirectionalElectricBlock;
 import org.patryk3211.powergrid.electricity.base.IDecoratedTerminal;
 import org.patryk3211.powergrid.electricity.base.TerminalBoundingBox;
 import org.patryk3211.powergrid.electricity.base.terminals.BlockStateTerminalCollection;
-import org.patryk3211.powergrid.electricity.light.bulb.ILightBulb;
+import com.github.zahisuku.powergrid_illuminations.electricity.ILedBulb;
 import org.patryk3211.powergrid.electricity.wire.powercord.AutoCordEndpoint;
 import org.patryk3211.powergrid.electricity.wire.powercord.IAcceptCord;
 
@@ -63,8 +63,8 @@ public class LEDFixtureBlock extends DirectionalElectricBlock implements IBE<LED
     
     public LEDFixtureBlock(Properties settings) {
         super(settings.lightLevel(state -> switch(state.getValue(POWER)) {
-            case 1 -> ILightBulb.LIGHT_LEVEL_LOW_POWER;
-            case 2 -> ILightBulb.LIGHT_LEVEL_FULL_POWER;
+            case 1 -> ILedBulb.LIGHT_LEVEL_LOW_POWER;
+            case 2 -> ILedBulb.LIGHT_LEVEL_FULL_POWER;
             default -> 0;
         }));
         modelOffset = Vec3.ZERO;
@@ -151,7 +151,7 @@ public class LEDFixtureBlock extends DirectionalElectricBlock implements IBE<LED
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if(hand != InteractionHand.MAIN_HAND)
             return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
-        if(stack.getItem() instanceof ILightBulb) {
+        if(stack.getItem() instanceof ILedBulb) {
             return onBlockEntityUseItemOn(level, pos, be ->
                     be.replaceBulb(player, hand, stack)
                             ? ItemInteractionResult.SUCCESS
