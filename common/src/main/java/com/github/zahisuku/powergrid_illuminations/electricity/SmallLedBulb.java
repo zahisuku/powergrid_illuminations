@@ -244,8 +244,8 @@ public class SmallLedBulb extends Item implements ILedBulb, IHaveElectricPropert
         @Override
         @Environment(EnvType.CLIENT)
         public @NotNull PartialModel getLightModel() {
-            if(bulb.canBeDyed() && color != null)
-                return dyedModelProvider.apply(DyedState.LIGHT);
+            // if(bulb.canBeDyed() && color != null)
+            //     return dyedModelProvider.apply(DyedState.LIGHT);
             return modelProvider.apply(State.LIGHT);
         }
 

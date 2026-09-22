@@ -9,8 +9,12 @@ import com.github.zahisuku.powergrid_illuminations.registry.ModBlocks;
 import com.github.zahisuku.powergrid_illuminations.registry.ModCreativeTabs;
 import com.github.zahisuku.powergrid_illuminations.registry.ModItems;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 public final class PowerGridIlluminations {
     public static final String MOD_ID = "powergrid_illuminations";
+
+	public static final Logger LOGGER = LoggerFactory.getLogger(PowerGridIlluminations.class);
 
     public static void init() {
         ModBlocks.register();
