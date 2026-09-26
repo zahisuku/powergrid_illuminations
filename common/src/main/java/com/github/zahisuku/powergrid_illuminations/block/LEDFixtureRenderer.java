@@ -23,6 +23,7 @@ public class LEDFixtureRenderer extends SafeBlockEntityRenderer<LEDFixtureBlockE
 
         var state = be.getBlockState();
         var facing = state.getValue(LEDFixtureBlock.FACING);
+        boolean isaxis = state.getValue(LEDFixtureBlock.ALONG_FIRST_AXIS);
 
         var vb = buffers.getBuffer(RenderType.cutout());
         var model = bulb.getModel();
@@ -30,7 +31,7 @@ public class LEDFixtureRenderer extends SafeBlockEntityRenderer<LEDFixtureBlockE
             return;
 
         var buffer = CachedBuffers.partial(model, state);
-        rotateToFacing(buffer, state.getValue(LEDFixtureBlock.FACING))
+        rotateToAxisFacing(buffer, state.getValue(LEDFixtureBlock.FACING),isaxis)
                 .translate(((LEDFixtureBlock) state.getBlock()).modelOffset)
                 .light(light)
                 .renderInto(poseStack, vb);
@@ -68,6 +69,33 @@ public class LEDFixtureRenderer extends SafeBlockEntityRenderer<LEDFixtureBlockE
                     .renderInto(poseStack,vba);
         }
     }
+
+    private static SuperByteBuffer rotateToAxisFacing(SuperByteBuffer buffer, Direction facing, boolean isaxis) {
+    // -------------------------------------------------------------
+    // Step 1: まず軸（Axis）に沿わせる回転を適用 (Axis Along First)
+    // -------------------------------------------------------------
+    if(isaxis) {
+        switch(facing){
+            case UP -> buffer.rotateCentered((float) (Math.PI * 1.5f), Direction.UP); // Y軸まわりに90°傾けてX軸に合わせる
+            case DOWN -> buffer.rotateCentered((float) (Math.PI * 0.5f), Direction.UP);
+            case SOUTH -> buffer.rotateCentered((float) Math.PI * 0.5f, Direction.SOUTH);
+            case NORTH -> buffer.rotateCentered((float) (Math.PI * 1.5f), Direction.SOUTH);
+            case EAST -> buffer.rotateCentered((float) Math.PI * 0.5f, Direction.EAST);
+            case WEST ->  buffer.rotateCentered((float) (Math.PI * 1.5f), Direction.EAST);
+            default -> {}
+        }
+    }else{
+        switch(facing){
+            case UP -> buffer.rotateCentered((float) Math.PI,Direction.UP);
+            default -> {}
+        }
+    }
+
+    // -------------------------------------------------------------
+    // Step 2: その後に設置面（Facing）へ向けた回転を適用
+    // -------------------------------------------------------------
+    return rotateToFacing(buffer, facing);
+}
 
     private static SuperByteBuffer rotateToFacing(SuperByteBuffer buffer, Direction facing) {
         return switch (facing) {
