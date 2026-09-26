@@ -1,8 +1,11 @@
 {
   "block.powergrid_illuminations.led_block": "LEDブロック",
+  "block.powergrid_illuminations.led_fixture": "LED用ソケット",
   "item.powergrid_illuminations.led_block": "LEDブロック",
-  "item.powergrid_illuminations.led_filament": "LED フィラメント",
+  "item.powergrid_illuminations.led_fixture": "LED Fixture",
+  "item.powergrid_illuminations.led_filament": "LED用ソケット",
   "item.powergrid_illuminations.lv_led_bulb": "LV LED",
   "item.powergrid_illuminations.led_bulb": "LED",
+  "item.powergrid_illuminations.small_led_bulb":"砲弾型LED",
   "category.powergrid_illuminations_tab": "Power Grid - Illuminations"
 }

@@ -10,6 +10,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 
 import static com.github.zahisuku.powergrid_illuminations.registry.ModBlocks.LED_BLOCK;
+import static com.github.zahisuku.powergrid_illuminations.registry.ModBlocks.LED_FIXTURE;
 
 public class ModItems {
     public static final DeferredRegister<Item> ITEMS =
@@ -32,6 +33,29 @@ public class ModItems {
                 )
             );
 
+    public static final RegistrySupplier<Item> LED_FIXTURE_ITEM = ITEMS
+        .register(
+                "led_fixture",
+                () -> new BlockItem(
+                        LED_FIXTURE.get(),
+                        new Item
+                            .Properties()
+                            .arch$tab(ModCreativeTabs.POWERGRID_ILLUMINATIONS_TAB)
+                )
+            );
+
+    public static final RegistrySupplier<Item> SMALL_LED_BULB_ITEM = ITEMS
+        .register(
+                "small_led_bulb",
+                () -> new SmallLedBulb(
+                        new Item
+                            .Properties()
+                            .arch$tab(ModCreativeTabs.POWERGRID_ILLUMINATIONS_TAB)
+            // // modelメソッドは、電球のアイテムモデルを設定するために使用されます。
+            // .model(itemWithParent("block/small_leds/small_led_bulb"))
+        )
+            );
+    
     public static final RegistrySupplier<Item> LV_LED_BULB = ITEMS
         .register(
                 "lv_led_bulb",

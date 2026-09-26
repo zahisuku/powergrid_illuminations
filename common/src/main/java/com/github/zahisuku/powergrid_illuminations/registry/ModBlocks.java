@@ -1,6 +1,7 @@
 package com.github.zahisuku.powergrid_illuminations.registry;
 
 import com.github.zahisuku.powergrid_illuminations.PowerGridIlluminations;
+import com.github.zahisuku.powergrid_illuminations.block.LEDFixtureBlock;
 import com.github.zahisuku.powergrid_illuminations.block.LedBlock;
 
 import dev.architectury.registry.registries.DeferredRegister;
@@ -43,6 +44,16 @@ public class ModBlocks {
                                                             ? 15
                                                             : 0
                                     )
+                    )
+            );
+
+
+        public static final RegistrySupplier<Block> LED_FIXTURE =
+            BLOCKS.register(
+                    "led_fixture",
+                    () -> new LEDFixtureBlock(
+                            BlockBehaviour.Properties.of()
+                                    .strength(1.5f, 6.0f)                
                     )
             );
 
