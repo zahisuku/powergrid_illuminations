@@ -12,7 +12,7 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-import org.patryk3211.powergrid.utility.Lang;
+import com.github.zahisuku.powergrid_illuminations.utility.Lang;
 import org.patryk3211.powergrid.utility.Unit;
 
 import java.util.List;
