@@ -7,5 +7,8 @@
   "item.powergrid_illuminations.lv_led_bulb": "LV LED Bulb",
   "item.powergrid_illuminations.led_bulb": "LED Bulb",
   "item.powergrid_illuminations.small_led_bulb":"small LED Bulb",
+  "powergrid_illuminations.gui.led_fixture.current": "input current",
+  "powergrid_illuminations.gui.led_fixture.info_header": "LED Fixture information",
+  "powergrid_illuminations.gui.led_fixture.voltage": "input voltage",
   "category.powergrid_illuminations_tab": "Power Grid - Illuminations"
 }
