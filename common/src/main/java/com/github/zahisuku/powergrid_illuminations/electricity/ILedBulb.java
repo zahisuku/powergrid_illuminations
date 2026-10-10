@@ -16,10 +16,8 @@ public interface ILedBulb {
     // overheatTemperatureは過熱温度を表します。
     record Properties(float dissipationFactor, float thermalMass, float overheatTemperature) { }
 
-    // resistanceFunctionメソッドは、温度に応じた電球の抵抗値を計算するための関数です。
     // thermalPropertiesメソッドは、電球の熱特性を返すメソッドです。
     // createStateメソッドは、電球の状態を作成するためのメソッドです。
-    float resistanceFunction(float temperature);
     Properties thermalProperties();
     <F extends SmartBlockEntity & ILedFixtureEntity> LedBulbState createState(F fixture);
 

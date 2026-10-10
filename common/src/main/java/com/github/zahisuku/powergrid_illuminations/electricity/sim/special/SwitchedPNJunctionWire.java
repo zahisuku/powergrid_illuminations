@@ -66,29 +66,14 @@ public class SwitchedPNJunctionWire extends PNJunctionWire {
         return this.state;
     }
     
-    public void setResistance(double resistance) {
-        if(state) {
-            validateResistance(resistance);
-            double old = this.resistance;
-            this.resistance = resistance;
-            if(network != null)
-                this.network.updateResistance(this, old);
-        } else {
-            // If switch is off we don't update the conductance matrix since it is zero anyway.
-            this.resistance = resistance;
-        }
-    }
-    
-    private static void validateResistance(double resistance) {
-        if(resistance <= 0)
-            throw new IllegalArgumentException("Wire resistance must be greater than zero");
-        if(!Double.isFinite(resistance))
-            throw new IllegalArgumentException("Wire resistance is not finite");
-    }
+    @Override
+public void startIteration(int iteration) {
+    super.startIteration(iteration);
+}
 
 
     public double getResistance() {
-        return resistance;
+        return state ? 1.0 / super.conductance() : 1.0 / OFF_CONDUCTANCE;
     }
 
     @Override

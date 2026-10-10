@@ -19,7 +19,10 @@ import com.github.zahisuku.powergrid_illuminations.electricity.ILedFixtureEntity
 import com.github.zahisuku.powergrid_illuminations.electricity.ILedBulb;
 import com.github.zahisuku.powergrid_illuminations.electricity.LedBulbState;
 
+import java.util.ArrayList;
+import java.util.List;
 
+import org.patryk3211.powergrid.electricity.base.ElectricBehaviour;
 public abstract class AbstractLedFixtureBlockEntity extends ElectricBlockEntity implements ILedFixtureEntity {
     @Nullable
     protected LedBulbState bulbState;
@@ -33,8 +36,7 @@ public abstract class AbstractLedFixtureBlockEntity extends ElectricBlockEntity 
     @Override
     public void initialize() {
         super.initialize();
-        if(!level.isClientSide)
-            electricBehaviour.setSyncAppender(bulbState);
+        updateSyncAppender();
     }
 
     @Override
@@ -51,10 +53,9 @@ public abstract class AbstractLedFixtureBlockEntity extends ElectricBlockEntity 
         if(bulbState == null) {
             filament.setState(false);
         } else {
-            filament.setResistance(bulbState.resistance());
             filament.setState(!bulbState.isBurned());
         }
-        electricBehaviour.setSyncAppender(bulbState);
+        updateSyncAppender();
         if(level != null && !level.isClientSide) {
             notifyUpdate();
         }
@@ -176,5 +177,41 @@ public abstract class AbstractLedFixtureBlockEntity extends ElectricBlockEntity 
             return ItemInteractionResult.SUCCESS;
         }
         return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+    }
+
+    /**
+     * サブクラスが追加の同期データを提供するためのフック。
+     */
+    @Nullable
+    protected ElectricBehaviour.SyncAppender getAdditionalSyncAppender() {
+        return null;
+    }
+
+    /**
+     * 電球状態と追加データの同期アペンダーをまとめて登録する。
+     */
+    protected void updateSyncAppender() {
+        List<ElectricBehaviour.SyncAppender> appenders = new ArrayList<>();
+
+        if (bulbState != null) {
+            appenders.add(bulbState);
+        }
+
+        ElectricBehaviour.SyncAppender additional = getAdditionalSyncAppender();
+        if (additional != null) {
+            appenders.add(additional);
+        }
+
+        if (appenders.isEmpty()) {
+            electricBehaviour.setSyncAppender(null);
+        } else if (appenders.size() == 1) {
+            electricBehaviour.setSyncAppender(appenders.get(0));
+        } else {
+            electricBehaviour.setSyncAppender(
+                ElectricBehaviour.CompoundAppender.of(
+                    appenders.toArray(new ElectricBehaviour.SyncAppender[0])
+                )
+            );
+        }
     }
 }
