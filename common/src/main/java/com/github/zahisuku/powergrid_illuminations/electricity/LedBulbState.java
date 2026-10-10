@@ -23,6 +23,7 @@ import org.patryk3211.powergrid.PowerGrid;
 import org.patryk3211.powergrid.electricity.base.ElectricBehaviour;
 import org.patryk3211.powergrid.electricity.base.ThermalBehaviour;
 
+import static com.github.zahisuku.powergrid_illuminations.PowerGridIlluminations.LOGGER;
 // LightBulbStateは電球の状態を表す抽象クラスであり、電球の温度、過熱状態、色などの情報を管理します。
 // ElectricBehaviour.SyncAppenderインターフェースを実装しており、
 // 電球の状態を同期するためのメソッドを提供します。
@@ -146,8 +147,8 @@ public abstract class LedBulbState implements ElectricBehaviour.SyncAppender {
             // 温度が異常値のとき、環境温度に設定。
             if(!Float.isFinite(temperature))
                 temperature = cachedAmbientTemperature;
-            // 現在温度を用いて、フィラメントの抵抗値を更新する。
-            filament.setResistance(bulb.resistanceFunction(temperature));
+            // // 現在温度を用いて、フィラメントの抵抗値を更新する。
+            // filament.setResistance(bulb.resistanceFunction(temperature));
 
             //　オーバーヒートかつ、その時間が4Tick以上ならば、焼損し、フィラメント停止、電力値を0にする。
             // また、オーバーヒート判定が5回目のときに実行
@@ -161,11 +162,11 @@ public abstract class LedBulbState implements ElectricBehaviour.SyncAppender {
             } else if (!isOverheated()) {
                 overheatTicks = 0;
             }
-            // 電力レベルを1200以上で1,1400以上で2,それ以外は0
+            // 電流レベルを0.02以上で1,0.03以上で2,それ以外は0
             int powerLevel = 0;
-            if(temperature > 1400f) {
+            if(filament.current() > 0.03f) {
                 powerLevel = 2;
-            } else if(temperature > 1200f) {
+            } else if(filament.current() > 0.02f) {
                 powerLevel = 1;
             }
             // 電力レベルを更新する。
@@ -192,10 +193,6 @@ public abstract class LedBulbState implements ElectricBehaviour.SyncAppender {
         return burned;
     }
 
-    // 温度による抵抗の函数
-    public float resistance() {
-        return bulb.resistanceFunction(temperature);
-    }
 
     public ItemStack toStack() {
         return new ItemStack(item);
@@ -215,7 +212,8 @@ public abstract class LedBulbState implements ElectricBehaviour.SyncAppender {
     public abstract PartialModel getLightModel();
 
     public float getAlpha() {
-        var x = Mth.clamp((temperature - 600f) / (1400f - 600f), 0, 1);
+        // 電流電圧の値に応じて、アルファ値を決定 関数Mth.clamp(値,0,1)を用いる
+        var x = 1f;
         return (Float)x * (Float)x;
     }
 

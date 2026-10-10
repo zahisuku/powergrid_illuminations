@@ -106,23 +106,6 @@ public class SmallLedBulb extends Item implements ILedBulb, IHaveElectricPropert
     }
 
 
-
-
-    // resistanceFunctionメソッドは、電球の抵抗を温度に応じて計算するためのメソッドです。
-    // このメソッドは、温度を引数として受け取り、抵抗値を返します。
-    // 抵抗値は、R_minからR_maxまでの範囲で、温度に応じて線形に変化します。
-    @Override
-    public float resistanceFunction(float temperature) {
-        return resistanceFunction(R_min, R_max, T_max, temperature);
-    }
-
-    // resistanceFunctionメソッドは、電球の抵抗を温度に応じて計算するための静的メソッドです。
-    // このメソッドは、最小抵抗R_min、最大抵抗R_max、最大温度T_max、温度temperatureを引数として受け取り、抵抗値を返します。
-    // 抵抗値は、R_minからR_maxまでの範囲で、温度に応じて線形に変化します。
-    public static float resistanceFunction(float R_min, float R_max, float T_max, float temperature) {
-        return R_min + ((R_max - R_min) / T_max) * temperature;
-    }
-
     @Override
     public ILedBulb.Properties thermalProperties() {
         return thermalProperties;

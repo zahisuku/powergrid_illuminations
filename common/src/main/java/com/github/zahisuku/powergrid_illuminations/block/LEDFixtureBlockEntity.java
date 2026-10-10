@@ -17,7 +17,11 @@ import org.patryk3211.powergrid.utility.Unit;
 
 import java.util.List;
 
+import net.minecraft.network.FriendlyByteBuf;
+import org.patryk3211.powergrid.electricity.base.ElectricBehaviour;
+
 import static net.minecraft.world.level.block.Block.UPDATE_ALL_IMMEDIATE;
+import static com.github.zahisuku.powergrid_illuminations.PowerGridIlluminations.LOGGER;
 
 public class LEDFixtureBlockEntity extends AbstractLedFixtureBlockEntity implements IHaveGoggleInformation {
     private SwitchedPNJunctionWire filament;
@@ -35,15 +39,29 @@ public class LEDFixtureBlockEntity extends AbstractLedFixtureBlockEntity impleme
         // 逆方向飽和電流, 直列抵抗, 温度（摂氏）, 理想係数, 絶縁破壊電圧, 降伏・飽和電流
         filament = new SwitchedPNJunctionWire(1e-28, 10,25, 2.0,
             5, 1e-5,
-            anode,cathode,false);
+            anode,cathode,false
+        );
         builder.add(filament);
     }
 
     @Override
     public void electricalTick() {
         super.electricalTick();
-        if(bulbState != null)
-            bulbState.runSpecialEffects(level, worldPosition, getBlockState().getValue(LEDFixtureBlock.FACING));
+         if (level == null || level.isClientSide || filament == null) {
+            return;
+        }
+        // LOGGER.info("[LED Debug] id={}, State={}, V={}, G={}, Ieq={}, I={}",
+        //     System.identityHashCode(filament),
+        //     filament.getState(),
+        //     filament.potentialDifference(),
+        //     filament.conductance(),
+        //     filament.current() -
+        //         filament.conductance() * filament.potentialDifference(),
+        //     filament.current()
+        // );
+        // 回路シミュレーションの値を同期用フィールドに保存する。
+        syncedVoltage = filament.potentialDifference();
+        syncedCurrent = filament.current();
     }
 
     public SwitchedPNJunctionWire getFilament() {
@@ -80,12 +98,12 @@ public class LEDFixtureBlockEntity extends AbstractLedFixtureBlockEntity impleme
        @Override
     public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
         Lang.translate("gui.led_fixture.info_header").forGoggles(tooltip);
+        // 電圧
         Lang.builder().translate("gui.led_fixture.voltage")
                 .style(ChatFormatting.GRAY)
                 .forGoggles(tooltip);
 
-        var voltage = (filament.potentialDifference());
-        var voltageText = String.format("%.2f", voltage);
+        var voltageText = String.format(java.util.Locale.ROOT,"%.2f", syncedVoltage);
         Lang.builder()
                 .text(voltageText)
                 .add(Component.nullToEmpty(" "))
@@ -93,12 +111,12 @@ public class LEDFixtureBlockEntity extends AbstractLedFixtureBlockEntity impleme
                 .style(ChatFormatting.BLUE)
                 .forGoggles(tooltip, 1);
 
+        // 電流
         Lang.builder().translate("gui.led_fixture.current")
                 .style(ChatFormatting.GRAY)
                 .forGoggles(tooltip);
 
-        var current = (-filament.current());
-        var currentText = String.format("%.2f", current);
+        var currentText = String.format(java.util.Locale.ROOT, "%.2f", syncedCurrent);
         Lang.builder()
                 .text(currentText)
                 .add(Component.nullToEmpty(" "))
@@ -107,5 +125,31 @@ public class LEDFixtureBlockEntity extends AbstractLedFixtureBlockEntity impleme
                 .forGoggles(tooltip, 1);
 
         return true;
+    }
+
+    // ゴーグル表示用の同期済み電圧・電流。
+    // サーバー側では送信元、クライアント側では受信先として使う。
+    private double syncedVoltage;
+    private double syncedCurrent;
+
+    private final ElectricBehaviour.SyncAppender telemetrySyncAppender =
+    new ElectricBehaviour.SyncAppender() {
+
+        @Override
+        public void writeToSync(FriendlyByteBuf buffer) {
+            buffer.writeDouble(syncedVoltage);
+            buffer.writeDouble(syncedCurrent);
+        }
+
+        @Override
+        public void readFromSync(FriendlyByteBuf buffer) {
+            syncedVoltage = buffer.readDouble();
+            syncedCurrent = buffer.readDouble();
+        }
+    };
+    
+    @Override
+    protected ElectricBehaviour.SyncAppender getAdditionalSyncAppender() {
+        return telemetrySyncAppender;
     }
 }
