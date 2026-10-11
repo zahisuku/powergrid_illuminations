@@ -1,12 +1,12 @@
 package com.github.zahisuku.powergrid_illuminations.electricity.sim.special;
 
 import org.patryk3211.powergrid.electricity.sim.node.IElectricNode;
+import org.patryk3211.powergrid.electricity.sim.solver.IResidualAdder;
 import org.patryk3211.powergrid.electricity.sim.special.PNJunctionWire;
 
 import static org.patryk3211.powergrid.electricity.sim.ElectricalNetwork.G_MIN;
 
 public class SwitchedPNJunctionWire extends PNJunctionWire {
-    protected double resistance;
     public static final double OFF_CONDUCTANCE = G_MIN * 0.5;
 
     private boolean state;
@@ -67,9 +67,21 @@ public class SwitchedPNJunctionWire extends PNJunctionWire {
     }
     
     @Override
-public void startIteration(int iteration) {
-    super.startIteration(iteration);
-}
+    public void startIteration(int iteration) {
+        // ON状態のときだけ、PN接合の反復計算を行う
+        if (state) {
+            super.startIteration(iteration);
+        }
+    }
+
+    @Override
+    public void addResidual(IResidualAdder residual) {
+        // OFF状態では、PN接合の等価電流項を回路に加算しない
+        if (state) {
+            super.addResidual(residual);
+        }
+    }
+
 
 
     public double getResistance() {
@@ -88,6 +100,6 @@ public void startIteration(int iteration) {
 
     @Override
     public String toString() {
-        return String.format("SwitchedPNJunctionWire(R=%g,%s,", resistance, state ? "ON" : "OFF") + super.toString() + ")";
+        return String.format("SwitchedPNJunctionWire(R=%g,%s,", 1.0 / OFF_CONDUCTANCE, state ? "ON" : "OFF") + super.toString() + ")";
     }
 }
