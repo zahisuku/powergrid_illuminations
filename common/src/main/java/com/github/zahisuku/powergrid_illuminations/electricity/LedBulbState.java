@@ -41,6 +41,7 @@ public abstract class LedBulbState implements ElectricBehaviour.SyncAppender {
     // temperature: 電球の現在の温度を表す浮動小数点数
     // burned: 電球が焼損しているかどうかを表すブール値
     // overheatTicks: 電球が過熱状態にある時間を表す整数
+    // overcurrentTicks: 過電流が継続したTick数
     // playEffect: 電球が焼損した際にエフェクトを再生するかどうかを表すブール値
     // cooldown: 電球が冷却中かどうかを表すブール値
     protected final float thermalMass;
@@ -49,11 +50,22 @@ public abstract class LedBulbState implements ElectricBehaviour.SyncAppender {
     protected float temperature;
     protected boolean burned;
     private int overheatTicks;
+    private int overcurrentTicks;
     private boolean playEffect;
     private boolean cooldown;
 
     // cachedAmbientTemperature: 電球の周囲温度をキャッシュするためのフィールド
     private Float cachedAmbientTemperature = null;
+
+    // 絶対最大定格順方向電流 [A]
+    private static final double MAX_FORWARD_CURRENT = 0.030;
+
+    // 発光レベルの判定に使う電流値（A）
+    private static final double CURRENT_LEVEL_1 = 0.005;
+    private static final double CURRENT_LEVEL_2 = 0.020;
+
+    // 描画用の発光強度（0.0～1.0）
+    private float lightIntensity;
 
     // color: 電球の色を表すDyeColorオブジェクト。nullの場合は色が設定されていないことを示す。
     @Nullable
@@ -82,14 +94,50 @@ public abstract class LedBulbState implements ElectricBehaviour.SyncAppender {
         this.burned = false;
     }
 
+    private void updateLightIntensity(double current) {
+        // 電流が異常値の場合は消灯
+        if (!Double.isFinite(current)) {
+            lightIntensity = 0.0f;
+            updatePowerLevel(0);
+            return;
+        }
+
+        // SwitchedPNJunctionWire側でダイオードの
+        // 順方向・逆方向の動作が計算されている前提
+        double forwardCurrent = Math.abs(current);
+
+        // 20 mAで最大強度となる簡易モデル
+        lightIntensity = (float) Mth.clamp(
+            forwardCurrent / CURRENT_LEVEL_2,
+            0.0,
+            1.0
+        );
+
+        // 電流に基づいて発光レベルを設定
+        int powerLevel = 0;
+
+        if (forwardCurrent > CURRENT_LEVEL_2) {
+            powerLevel = 2;
+        } else if (forwardCurrent > CURRENT_LEVEL_1) {
+            powerLevel = 1;
+        }
+
+        updatePowerLevel(powerLevel);
+    }
+
     // 電球に電力を適用するメソッド。
     // 電球が焼損していない場合、与えられた熱量を基にエネルギーを計算し、温度を更新します。
     // 熱量が負の場合、温度が周囲温度より低くならないように調整します。
-    protected void applyPower(double power) {
+    protected void applyPower(double heatPower) {
         if(burned)
             return;
-        double energy = power / 20.0;
+
+        // 1 tickあたりの発熱エネルギー [J]
+        double energy = heatPower / 20.0;
+        
+         // 熱容量に基づいて温度を更新
         temperature += (float) (energy / thermalMass);
+         // 冷却時に周囲温度を下回らないようにする
         if(energy < 0 && temperature < cachedAmbientTemperature)
             temperature = cachedAmbientTemperature;
     }
@@ -147,8 +195,6 @@ public abstract class LedBulbState implements ElectricBehaviour.SyncAppender {
             // 温度が異常値のとき、環境温度に設定。
             if(!Float.isFinite(temperature))
                 temperature = cachedAmbientTemperature;
-            // // 現在温度を用いて、フィラメントの抵抗値を更新する。
-            // filament.setResistance(bulb.resistanceFunction(temperature));
 
             //　オーバーヒートかつ、その時間が4Tick以上ならば、焼損し、フィラメント停止、電力値を0にする。
             // また、オーバーヒート判定が5回目のときに実行
@@ -162,15 +208,21 @@ public abstract class LedBulbState implements ElectricBehaviour.SyncAppender {
             } else if (!isOverheated()) {
                 overheatTicks = 0;
             }
-            // 電流レベルを0.02以上で1,0.03以上で2,それ以外は0
-            int powerLevel = 0;
-            if(filament.current() > 0.03f) {
-                powerLevel = 2;
-            } else if(filament.current() > 0.02f) {
-                powerLevel = 1;
+
+            // 過電流が5Tick連続した場合に焼損
+            var current = filament.current();
+            if (isOvercurrent(current) && overcurrentTicks++ >= 4) {
+                burned = true;
+                playEffect = true;
+                filament.setState(false);
+                updatePowerLevel(0);
+                fixtureBE.notifyUpdate();
+                return;
+            } else if(!isOvercurrent(current)){
+                overcurrentTicks = 0;
             }
-            // 電力レベルを更新する。
-            updatePowerLevel(powerLevel);
+            // 電流に応じたpowerLevelの更新
+            updateLightIntensity(filament.current());
         }
     }
 
@@ -182,6 +234,14 @@ public abstract class LedBulbState implements ElectricBehaviour.SyncAppender {
         if(burned || level.isClientSide || getPowerLevel() == 0)
             return;
         specialEffects(pos, facing);
+    }
+
+    // 絶対最大定格電流を超えているか
+    public boolean isOvercurrent(double current) {
+        if (!Double.isFinite(current)) {
+            return false;
+        }
+        return Math.abs(current) > MAX_FORWARD_CURRENT;
     }
 
     // OverHeatか否か
@@ -213,8 +273,11 @@ public abstract class LedBulbState implements ElectricBehaviour.SyncAppender {
 
     public float getAlpha() {
         // 電流電圧の値に応じて、アルファ値を決定 関数Mth.clamp(値,0,1)を用いる
-        var x = 1f;
-        return (Float)x * (Float)x;
+        return lightIntensity;
+    }
+
+    public double getTemp() {
+        return temperature;
     }
 
     public void write(CompoundTag nbt) {
@@ -280,10 +343,12 @@ public abstract class LedBulbState implements ElectricBehaviour.SyncAppender {
     @Override
     public void writeToSync(FriendlyByteBuf buffer) {
         buffer.writeFloat(temperature);
+        buffer.writeFloat(lightIntensity);
     }
 
     @Override
     public void readFromSync(FriendlyByteBuf buffer) {
         temperature = buffer.readFloat();
+        lightIntensity = buffer.readFloat();
     }
 }

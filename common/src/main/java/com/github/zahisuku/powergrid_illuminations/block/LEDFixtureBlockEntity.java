@@ -47,7 +47,7 @@ public class LEDFixtureBlockEntity extends AbstractLedFixtureBlockEntity impleme
     @Override
     public void electricalTick() {
         super.electricalTick();
-         if (level == null || level.isClientSide || filament == null) {
+         if (level == null || level.isClientSide || filament == null || bulbState == null) {
             return;
         }
         // LOGGER.info("[LED Debug] id={}, State={}, V={}, G={}, Ieq={}, I={}",
@@ -62,6 +62,7 @@ public class LEDFixtureBlockEntity extends AbstractLedFixtureBlockEntity impleme
         // 回路シミュレーションの値を同期用フィールドに保存する。
         syncedVoltage = filament.potentialDifference();
         syncedCurrent = filament.current();
+        syncedTemperature = bulbState.getTemp();
     }
 
     public SwitchedPNJunctionWire getFilament() {
@@ -116,11 +117,19 @@ public class LEDFixtureBlockEntity extends AbstractLedFixtureBlockEntity impleme
                 .style(ChatFormatting.GRAY)
                 .forGoggles(tooltip);
 
-        var currentText = String.format(java.util.Locale.ROOT, "%.2f", syncedCurrent);
         Lang.builder()
-                .text(currentText)
-                .add(Component.nullToEmpty(" "))
-                .add(Unit.CURRENT.get())
+                .add(Unit.CURRENT.formatWithPrefixes(syncedCurrent))
+                .style(ChatFormatting.GREEN)
+                .forGoggles(tooltip, 1);
+
+        // 温度
+        Lang.builder()
+                .text("Temp:")
+                .style(ChatFormatting.GRAY)
+                .forGoggles(tooltip);
+        
+        Lang.builder()
+                .add(Unit.TEMPERATURE.formatWithPrefixes(syncedTemperature))
                 .style(ChatFormatting.GREEN)
                 .forGoggles(tooltip, 1);
 
@@ -131,6 +140,7 @@ public class LEDFixtureBlockEntity extends AbstractLedFixtureBlockEntity impleme
     // サーバー側では送信元、クライアント側では受信先として使う。
     private double syncedVoltage;
     private double syncedCurrent;
+    private double syncedTemperature;
 
     private final ElectricBehaviour.SyncAppender telemetrySyncAppender =
     new ElectricBehaviour.SyncAppender() {
@@ -139,12 +149,14 @@ public class LEDFixtureBlockEntity extends AbstractLedFixtureBlockEntity impleme
         public void writeToSync(FriendlyByteBuf buffer) {
             buffer.writeDouble(syncedVoltage);
             buffer.writeDouble(syncedCurrent);
+            buffer.writeDouble(syncedTemperature);
         }
 
         @Override
         public void readFromSync(FriendlyByteBuf buffer) {
             syncedVoltage = buffer.readDouble();
             syncedCurrent = buffer.readDouble();
+            syncedTemperature = buffer.readDouble();
         }
     };
     

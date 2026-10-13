@@ -53,14 +53,8 @@ public class SmallLedBulb extends Item implements ILedBulb, IHaveElectricPropert
     private static final PartialModel DYED_MODEL_BULB = partial("block/small_leds/dyed_small_led_bulb_bulb");
 
     // 電球の最大温度、最大抵抗、最小抵抗などの電気的特性を定義するフィールドです。
-    // T_maxは、電球が耐えられる最大温度を表します。
-    // R_maxは、電球の最大抵抗を表します。
-    // R_minは、電球の最小抵抗を表します。
     // thermalPropertiesは、電球の熱的特性を表すILedBulb.Propertiesオブジェクトです。  
     // canBeDyedは、電球が染色可能かどうかを示すブール値です。
-    protected float T_max = 1200;
-    protected float R_max = 100;
-    protected float R_min = 15;
     protected ILedBulb.Properties thermalProperties;
     protected boolean canBeDyed;
 
@@ -69,13 +63,11 @@ public class SmallLedBulb extends Item implements ILedBulb, IHaveElectricPropert
     protected float power = 0;
     protected float voltage = 0;
 
-    private static final float RATED_POWER_WATTS = 3.0f;
-    private static final float RATED_VOLTAGE_VOLTS = 120.0f;
-    private static final float TEMPERATURE_AT_RATED_RESISTANCE = 1450.0f;
-    private static final float MIN_RESISTANCE_FACTOR = 0.85f;
-    private static final float THERMAL_MASS = 0.00015f;
-    private static final float OVERHEAT_TEMPERATURE = 2100.0f;
-    private static final float DISSIPATION_DIVISOR = 1450.0f;
+    private static final float RATED_POWER_WATTS = 0.062f;
+    private static final float RATED_VOLTAGE_VOLTS = 3.1f;
+    private static final float THERMAL_MASS = 0.01f;
+    private static final float OVERHEAT_TEMPERATURE = 85.0f;
+    private static final float DISSIPATION_DIVISOR = 100.0f;
 
     // コンストラクタは、Item.Propertiesを引数として受け取り、Itemクラスのコンストラクタを呼び出します。
     // これにより、電球アイテムの基本的な設定が行われます。
@@ -100,7 +92,6 @@ public class SmallLedBulb extends Item implements ILedBulb, IHaveElectricPropert
         applyRatedValues(
                 RATED_POWER_WATTS,
                 RATED_VOLTAGE_VOLTS,
-                TEMPERATURE_AT_RATED_RESISTANCE,
                 THERMAL_MASS
         );
     }
@@ -131,8 +122,6 @@ public class SmallLedBulb extends Item implements ILedBulb, IHaveElectricPropert
         if(voltage > 0 && power > 0) {
             Voltage.rated(voltage, player, tooltip);
             Power.rated(power, player, tooltip);
-        } else {
-            Resistance.series(R_max, player, tooltip);
         }
     }
 
@@ -259,14 +248,10 @@ public class SmallLedBulb extends Item implements ILedBulb, IHaveElectricPropert
     private void applyRatedValues(
             float ratedPower,
             float ratedVoltage,
-            float maxTemperature,
             float thermalMass
     ) {
         this.power = ratedPower;
         this.voltage = ratedVoltage;
-        this.T_max = maxTemperature;
-        this.R_max = (ratedVoltage * ratedVoltage) / ratedPower;
-        this.R_min = this.R_max * MIN_RESISTANCE_FACTOR;
         this.thermalProperties = new ILedBulb.Properties(
                 ratedPower / DISSIPATION_DIVISOR,
                 thermalMass,
