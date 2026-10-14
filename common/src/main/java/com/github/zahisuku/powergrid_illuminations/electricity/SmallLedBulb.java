@@ -60,14 +60,14 @@ public class SmallLedBulb extends Item implements ILedBulb, IHaveElectricPropert
 
     // powerは、電球の定格電力を表します。
     // voltageは、電球の定格電圧を表します。
-    protected float power = 0;
-    protected float voltage = 0;
+    protected float power = 0.062f;
+    protected float voltage = 3.1f;
 
     private static final float RATED_POWER_WATTS = 0.062f;
     private static final float RATED_VOLTAGE_VOLTS = 3.1f;
     private static final float THERMAL_MASS = 0.01f;
-    private static final float OVERHEAT_TEMPERATURE = 85.0f;
-    private static final float DISSIPATION_DIVISOR = 100.0f;
+    private static final float OVERHEAT_TEMPERATURE = 100.0f;
+    private static final float DISSIPATION_DIVISOR = 20.0f;
 
     // コンストラクタは、Item.Propertiesを引数として受け取り、Itemクラスのコンストラクタを呼び出します。
     // これにより、電球アイテムの基本的な設定が行われます。

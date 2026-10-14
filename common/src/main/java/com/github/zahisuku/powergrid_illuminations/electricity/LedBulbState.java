@@ -125,6 +125,14 @@ public abstract class LedBulbState implements ElectricBehaviour.SyncAppender {
         updatePowerLevel(powerLevel);
     }
 
+    // LEDの光変換効率（仮定）
+    private static final double OPTICAL_EFFICIENCY = 0.25;
+
+    // 電気入力電力から発熱量を計算する
+    private double calculateHeatPower(double inputPower) {
+        return inputPower * (1.0 - OPTICAL_EFFICIENCY);
+    }
+
     // 電球に電力を適用するメソッド。
     // 電球が焼損していない場合、与えられた熱量を基にエネルギーを計算し、温度を更新します。
     // 熱量が負の場合、温度が周囲温度より低くならないように調整します。
@@ -183,7 +191,7 @@ public abstract class LedBulbState implements ElectricBehaviour.SyncAppender {
             // 回路が完成しているとき、フィラメントの発熱量-放熱量を電球に適用
             // ネットワークが未接続の時、cooldown(放熱)を有効にし、-放熱量を電球に適用
             if(filament.isConverged()) {
-                applyPower(filament.power() - dissipatedPower);
+                applyPower(calculateHeatPower(filament.power()) - dissipatedPower);
                 cooldown = false;
             } else if(filament.getNetwork() == null) {
                 if(cooldown) {
