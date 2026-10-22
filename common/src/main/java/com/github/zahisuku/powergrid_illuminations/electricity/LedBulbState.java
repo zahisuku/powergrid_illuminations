@@ -41,7 +41,7 @@ public abstract class LedBulbState implements ElectricBehaviour.SyncAppender {
     // temperature: 電球の現在の温度を表す浮動小数点数
     // burned: 電球が焼損しているかどうかを表すブール値
     // overheatTicks: 電球が過熱状態にある時間を表す整数
-    // overcurrentTicks: 過電流が継続したTick数
+    // faultTicks: 過電流が継続したTick数
     // playEffect: 電球が焼損した際にエフェクトを再生するかどうかを表すブール値
     // cooldown: 電球が冷却中かどうかを表すブール値
     protected final float thermalMass;
@@ -50,7 +50,7 @@ public abstract class LedBulbState implements ElectricBehaviour.SyncAppender {
     protected float temperature;
     protected boolean burned;
     private int overheatTicks;
-    private int overcurrentTicks;
+    private int faultTicks;
     private boolean playEffect;
     private boolean cooldown;
 
@@ -59,6 +59,9 @@ public abstract class LedBulbState implements ElectricBehaviour.SyncAppender {
 
     // 絶対最大定格順方向電流 [A]
     private static final double MAX_FORWARD_CURRENT = 0.030;
+
+    // 絶対最大定格逆方向電圧 [V]
+    private static final double MAX_REVERSE_VOLTAGE = -5.0;
 
     // 発光レベルの判定に使う電流値（A）
     private static final double CURRENT_LEVEL_1 = 0.005;
@@ -219,15 +222,16 @@ public abstract class LedBulbState implements ElectricBehaviour.SyncAppender {
 
             // 過電流が5Tick連続した場合に焼損
             var current = filament.current();
-            if (isOvercurrent(current) && overcurrentTicks++ >= 4) {
+            var voltage = filament.potentialDifference();
+            if ((isOvercurrent(current) || isReverseOvervoltage(voltage)) && faultTicks++ >= 4) {
                 burned = true;
                 playEffect = true;
                 filament.setState(false);
                 updatePowerLevel(0);
                 fixtureBE.notifyUpdate();
                 return;
-            } else if(!isOvercurrent(current)){
-                overcurrentTicks = 0;
+            } else if( !(isOvercurrent(current) || isReverseOvervoltage(voltage)) ){
+                faultTicks = 0;
             }
             // 電流に応じたpowerLevelの更新
             updateLightIntensity(filament.current());
@@ -242,6 +246,14 @@ public abstract class LedBulbState implements ElectricBehaviour.SyncAppender {
         if(burned || level.isClientSide || getPowerLevel() == 0)
             return;
         specialEffects(pos, facing);
+    }
+
+    // 絶対最大定格逆方向電圧を超えているか
+    public boolean isReverseOvervoltage(double voltage) {
+        if(!Double.isFinite(voltage)) {
+            return false;
+        }
+        return voltage < MAX_REVERSE_VOLTAGE;
     }
 
     // 絶対最大定格電流を超えているか
