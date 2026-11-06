@@ -35,9 +35,11 @@ public class LEDFixtureBlockEntity extends AbstractLedFixtureBlockEntity impleme
         builder.setTerminalCount(2);
         var anode = builder.terminalNode(0);
         var cathode = builder.terminalNode(1);
-        // 一般的な5mm白色LEDの仕様
+        // 5mm白色LEDの仕様
+        // model: WP7113QWC/D
+        // 動作点は3.3Vで20mA
         // 逆方向飽和電流, 直列抵抗, 温度（摂氏）, 理想係数, 絶縁破壊電圧, 降伏・飽和電流
-        filament = new SwitchedPNJunctionWire(1e-28, 10,25, 2.0,
+        filament = new SwitchedPNJunctionWire(1e-26, 24,25, 1.95,
             5, 1e-5,
             anode,cathode,false
         );
@@ -50,6 +52,7 @@ public class LEDFixtureBlockEntity extends AbstractLedFixtureBlockEntity impleme
          if (level == null || level.isClientSide || filament == null || bulbState == null) {
             return;
         }
+        // debug用
         // LOGGER.info("[LED Debug] id={}, State={}, V={}, G={}, Ieq={}, I={}",
         //     System.identityHashCode(filament),
         //     filament.getState(),

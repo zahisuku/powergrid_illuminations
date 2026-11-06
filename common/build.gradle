@@ -50,4 +50,20 @@ dependencies {
         "dev.ryanhcode.sable-companion:sable-companion-common-${minecraft_version}:1.6.0"
     )
 
+        // JUnit 5
+    testImplementation platform('org.junit:junit-bom:5.13.4')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+
+    // テスト実行エンジン
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    compileOnly "org.ejml:ejml-core:0.44.0"
+    compileOnly "org.ejml:ejml-simple:0.44.0"
+    compileOnly "org.ejml:ejml-ddense:0.44.0"
+    compileOnly "org.ejml:ejml-dsparse:0.44.0"
+
+    // JUnit 実行時に EJML を読み込む
+    testRuntimeOnly "org.ejml:ejml-core:0.44.0"
+    testRuntimeOnly "org.ejml:ejml-simple:0.44.0"
+    testRuntimeOnly "org.ejml:ejml-ddense:0.44.0"
+    testRuntimeOnly "org.ejml:ejml-dsparse:0.44.0"
 }
